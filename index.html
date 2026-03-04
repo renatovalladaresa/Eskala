@@ -1,0 +1,489 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.2">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="es"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1">&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1">&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1">&lt;title&gt;Contabilidad Multi-Negocio&lt;/title&gt;</p>
+<p class="p1">&lt;style&gt;</p>
+<p class="p1">*{box-sizing:border-box;margin:0;padding:0}</p>
+<p class="p1">body{font-family:'Segoe UI',sans-serif;background:#f0f4f8;color:#333;min-height:100vh}</p>
+<p class="p1">/* SELECTOR DE NEGOCIO */</p>
+<p class="p1">#biz-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px}</p>
+<p class="p1">#biz-screen h1{color:#2d6a4f;font-size:1.4rem;margin-bottom:6px}</p>
+<p class="p1">#biz-screen p{color:#888;font-size:0.85rem;margin-bottom:24px}</p>
+<p class="p1">.biz-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:500px}</p>
+<p class="p1">.biz-card{background:white;border-radius:14px;padding:18px;text-align:center;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.08);transition:transform .15s,box-shadow .15s;border:2px solid transparent}</p>
+<p class="p1">.biz-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.12);border-color:#2d6a4f}</p>
+<p class="p1">.biz-card .icon{font-size:2rem;margin-bottom:8px}</p>
+<p class="p1">.biz-card .name{font-weight:700;font-size:0.95rem;color:#333}</p>
+<p class="p1">.biz-card .sub{font-size:0.75rem;color:#888;margin-top:2px}</p>
+<p class="p1">.biz-add{background:#f8fff9;border:2px dashed #b7e4c7;color:#2d6a4f;cursor:pointer;border-radius:14px;padding:18px;text-align:center;font-size:1.5rem}</p>
+<p class="p1">.biz-add:hover{background:#e8f8ee}</p>
+<p class="p1">/* MODAL */</p>
+<p class="p1">.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;align-items:center;justify-content:center}</p>
+<p class="p1">.modal-bg.open{display:flex}</p>
+<p class="p1">.modal{background:white;border-radius:16px;padding:24px;width:90%;max-width:400px}</p>
+<p class="p1">.modal h3{color:#2d6a4f;margin-bottom:16px}</p>
+<p class="p1">/* MAIN APP */</p>
+<p class="p1">#app-screen{display:none}</p>
+<p class="p1">header{background:#2d6a4f;color:white;padding:14px 20px;display:flex;align-items:center;gap:10px}</p>
+<p class="p1">header .back{background:none;border:none;color:white;font-size:1.2rem;cursor:pointer;padding:4px 8px}</p>
+<p class="p1">header h1{font-size:1rem;flex:1}</p>
+<p class="p1">header .biz-name{font-size:0.8rem;background:rgba(255,255,255,.2);padding:4px 10px;border-radius:20px}</p>
+<p class="p1">nav{display:flex;background:#1b4332}</p>
+<p class="p1">nav button{flex:1;padding:11px 4px;background:none;border:none;color:#a8d5ba;cursor:pointer;font-size:0.78rem;transition:background .2s}</p>
+<p class="p1">nav button.active,nav button:hover{background:#2d6a4f;color:white}</p>
+<p class="p1">.page{display:none;padding:16px;max-width:700px;margin:0 auto}</p>
+<p class="p1">.page.active{display:block}</p>
+<p class="p1">.card{background:white;border-radius:12px;padding:18px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.07)}</p>
+<p class="p1">.card h2{font-size:.95rem;color:#2d6a4f;margin-bottom:14px;border-bottom:2px solid #d8f3dc;padding-bottom:7px}</p>
+<p class="p1">label{display:block;font-size:.82rem;color:#555;margin-bottom:3px;margin-top:10px}</p>
+<p class="p1">input,select{width:100%;padding:9px;border:1px solid #ddd;border-radius:8px;font-size:.88rem}</p>
+<p class="p1">input:focus,select:focus{outline:none;border-color:#2d6a4f}</p>
+<p class="p1">.btn{display:block;padding:10px 20px;background:#2d6a4f;color:white;border:none;border-radius:8px;cursor:pointer;font-size:.88rem;margin-top:12px;width:100%}</p>
+<p class="p1">.btn:hover{background:#1b4332}</p>
+<p class="p1">.btn-outline{background:white;color:#2d6a4f;border:2px solid #2d6a4f}</p>
+<p class="p1">.btn-outline:hover{background:#f0faf4}</p>
+<p class="p1">.btn-red{background:#c0392b}.btn-red:hover{background:#922b21}</p>
+<p class="p1">.summary-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}</p>
+<p class="p1">.sum-card{background:white;border-radius:12px;padding:14px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.07)}</p>
+<p class="p1">.sum-card .val{font-size:1.25rem;font-weight:700;margin-top:4px}</p>
+<p class="p1">.sum-card .lbl{font-size:.72rem;color:#888}</p>
+<p class="p1">.green{color:#2d6a4f}.red{color:#c0392b}.blue{color:#2471a3}</p>
+<p class="p1">table{width:100%;border-collapse:collapse;font-size:.82rem}</p>
+<p class="p1">th{background:#f0f4f8;text-align:left;padding:7px 9px;color:#555}</p>
+<p class="p1">td{padding:7px 9px;border-bottom:1px solid #f0f0f0}</p>
+<p class="p1">tr:last-child td{border-bottom:none}</p>
+<p class="p1">.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.72rem;font-weight:600}</p>
+<p class="p1">.bg{background:#d8f3dc;color:#2d6a4f}.br{background:#fadbd8;color:#c0392b}</p>
+<p class="p1">.empty{text-align:center;color:#aaa;padding:24px;font-size:.88rem}</p>
+<p class="p1">.del-btn{background:none;border:none;cursor:pointer;color:#c0392b}</p>
+<p class="p1">.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}</p>
+<p class="p1">/* VENTA RÁPIDA */</p>
+<p class="p1">.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}</p>
+<p class="p1">.quick-btn{background:white;border:2px solid #b7e4c7;border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .15s}</p>
+<p class="p1">.quick-btn:hover,.quick-btn.sel{background:#2d6a4f;border-color:#2d6a4f;color:white}</p>
+<p class="p1">.quick-btn .qname{font-weight:700;font-size:.88rem}</p>
+<p class="p1">.quick-btn .qprice{font-size:.78rem;color:#2d6a4f;margin-top:2px}</p>
+<p class="p1">.quick-btn:hover .qprice,.quick-btn.sel .qprice{color:#a8d5ba}</p>
+<p class="p1">.pill-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}</p>
+<p class="p1">.pill{padding:5px 12px;border-radius:20px;border:1px solid #ddd;background:white;font-size:.8rem;cursor:pointer}</p>
+<p class="p1">.pill.active{background:#2d6a4f;color:white;border-color:#2d6a4f}</p>
+<p class="p1">#mes-sel{width:auto;padding:5px 8px;font-size:.82rem;border-radius:8px;border:1px solid #ddd}</p>
+<p class="p1">&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- PANTALLA: SELECTOR DE NEGOCIOS --&gt;</p>
+<p class="p1">&lt;div id="biz-screen"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;h1&gt;💼 Mis Negocios&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;p&gt;Selecciona un negocio para gestionar&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="biz-grid" id="biz-grid"&gt;&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- MODAL: NUEVO NEGOCIO --&gt;</p>
+<p class="p1">&lt;div class="modal-bg" id="modal-new-biz"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="modal"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h3&gt;➕ Nuevo Negocio&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;Nombre del negocio&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;input type="text" id="nb-name" placeholder="Ej: Tienda de Ana, Lavandería..."&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;Ícono (emoji)&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;input type="text" id="nb-icon" placeholder="🏪" maxlength="4" value="🏪"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;Propietario / Cliente&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;input type="text" id="nb-owner" placeholder="Nombre del dueño"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="btn" onclick="createBiz()" style="margin-top:16px"&gt;Crear Negocio&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="btn btn-outline" onclick="closeModal('modal-new-biz')" style="margin-top:8px"&gt;Cancelar&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- MODAL: VENTA RÁPIDA CONFIRMACIÓN --&gt;</p>
+<p class="p1">&lt;div class="modal-bg" id="modal-quick"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="modal"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h3 id="q-title"&gt;Registrar Venta&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;p style="font-size:.85rem;color:#888;margin-bottom:12px"&gt;Servicio seleccionado: &lt;strong id="q-svc"&gt;&lt;/strong&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;Monto (S/) — editable&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;input type="number" id="q-monto" min="0" step="0.01"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;Cliente (opcional)&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;input type="text" id="q-cliente" placeholder="Nombre del cliente"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label&gt;Fecha&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;input type="date" id="q-fecha"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="btn" onclick="confirmQuick()" style="margin-top:14px"&gt;✅ Confirmar Venta&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="btn btn-outline" onclick="closeModal('modal-quick')" style="margin-top:8px"&gt;Cancelar&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- APP PRINCIPAL --&gt;</p>
+<p class="p1">&lt;div id="app-screen"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;header&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="back" onclick="goBack()"&gt;←&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;h1 id="app-title"&gt;Negocio&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;span class="biz-name" id="app-owner"&gt;&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/header&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;nav&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="active" onclick="goTo('dashboard',this)"&gt;📊 Resumen&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button onclick="goTo('quick',this)"&gt;⚡ Venta&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button onclick="goTo('gastos',this)"&gt;📤 Gastos&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button onclick="goTo('servicios',this)"&gt;🛠️ Servicios&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/nav&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- RESUMEN --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="dashboard" class="page active"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div style="display:flex;align-items:center;gap:8px;margin:12px 0 6px;padding:0 2px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;span style="font-size:.82rem;color:#555"&gt;Mes:&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;select id="mes-sel" onchange="renderDashboard()"&gt;&lt;/select&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="summary-grid"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="sum-card"&gt;&lt;div class="lbl"&gt;Ingresos&lt;/div&gt;&lt;div class="val green" id="s-ing"&gt;S/0&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="sum-card"&gt;&lt;div class="lbl"&gt;Gastos&lt;/div&gt;&lt;div class="val red" id="s-gas"&gt;S/0&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="sum-card"&gt;&lt;div class="lbl"&gt;Ganancia&lt;/div&gt;&lt;div class="val blue" id="s-gan"&gt;S/0&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2&gt;📋 Movimientos del mes&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Fecha&lt;/th&gt;&lt;th&gt;Descripción&lt;/th&gt;&lt;th&gt;Tipo&lt;/th&gt;&lt;th&gt;Monto&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;tbody id="mov-table"&gt;&lt;/tbody&gt;&lt;/table&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- VENTA RÁPIDA --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="quick" class="page"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2&gt;⚡ Venta Rápida — 1 clic&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p style="font-size:.82rem;color:#888;margin-bottom:12px"&gt;Toca un servicio para registrar la venta al instante&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="quick-grid" id="quick-grid"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p id="no-svc" style="display:none" class="empty"&gt;Agrega servicios en la pestaña 🛠️ para usar ventas rápidas&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2&gt;➕ Venta Manual&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;label&gt;Servicio / Descripción&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;input type="text" id="vm-desc" placeholder="¿Qué vendiste?"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="row2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;&lt;label&gt;Monto (S/)&lt;/label&gt;&lt;input type="number" id="vm-monto" placeholder="0.00" min="0" step=".01"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;&lt;label&gt;Fecha&lt;/label&gt;&lt;input type="date" id="vm-fecha"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;label&gt;Cliente (opcional)&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;input type="text" id="vm-cliente" placeholder="Nombre del cliente"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="btn" onclick="addVentaManual()"&gt;Registrar Venta&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2&gt;📋 Últimas Ventas&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Fecha&lt;/th&gt;&lt;th&gt;Servicio&lt;/th&gt;&lt;th&gt;Cliente&lt;/th&gt;&lt;th&gt;Monto&lt;/th&gt;&lt;th&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;tbody id="v-table"&gt;&lt;/tbody&gt;&lt;/table&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- GASTOS --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="gastos" class="page"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2&gt;➕ Registrar Gasto&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="row2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;&lt;label&gt;Fecha&lt;/label&gt;&lt;input type="date" id="g-fecha"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;&lt;label&gt;Monto (S/)&lt;/label&gt;&lt;input type="number" id="g-monto" placeholder="0.00" min="0" step=".01"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;label&gt;Categoría&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;select id="g-cat"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;option&gt;Materiales&lt;/option&gt;&lt;option&gt;Transporte&lt;/option&gt;&lt;option&gt;Publicidad&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;option&gt;Servicios básicos&lt;/option&gt;&lt;option&gt;Herramientas&lt;/option&gt;&lt;option&gt;Otro&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/select&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;label&gt;Descripción&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;input type="text" id="g-desc" placeholder="¿En qué gastaste?"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="btn" onclick="addGasto()"&gt;Registrar Gasto&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2&gt;📋 Historial de Gastos&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Fecha&lt;/th&gt;&lt;th&gt;Categoría&lt;/th&gt;&lt;th&gt;Descripción&lt;/th&gt;&lt;th&gt;Monto&lt;/th&gt;&lt;th&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;tbody id="g-table"&gt;&lt;/tbody&gt;&lt;/table&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- SERVICIOS --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="servicios" class="page"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2&gt;➕ Agregar Servicio&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;label&gt;Nombre&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;input type="text" id="s-nombre" placeholder="Ej: Corte de cabello, Diseño..."&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="row2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;&lt;label&gt;Precio base (S/)&lt;/label&gt;&lt;input type="number" id="s-precio" placeholder="0.00" min="0" step=".01"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;&lt;label&gt;Duración&lt;/label&gt;&lt;input type="text" id="s-dur" placeholder="Ej: 1 hora"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="btn" onclick="addServicio()"&gt;Agregar Servicio&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2&gt;🗂️ Catálogo&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Servicio&lt;/th&gt;&lt;th&gt;Precio&lt;/th&gt;&lt;th&gt;Duración&lt;/th&gt;&lt;th&gt;&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;tbody id="s-table"&gt;&lt;/tbody&gt;&lt;/table&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1">// ── STATE ──────────────────────────────────────</p>
+<p class="p1">let businesses = {};<span class="Apple-converted-space">  </span>// { id: { name, icon, owner, ventas:[], gastos:[], servicios:[] } }</p>
+<p class="p1">let currentBiz = null;</p>
+<p class="p1">let quickSelected = null;</p>
+<p class="p2"><br></p>
+<p class="p1">function save() { localStorage.setItem('multi_biz', JSON.stringify(businesses)); }</p>
+<p class="p1">function load() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const d = localStorage.getItem('multi_biz');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (d) businesses = JSON.parse(d);</p>
+<p class="p1">}</p>
+<p class="p1">function biz() { return businesses[currentBiz]; }</p>
+<p class="p1">function today() { return new Date().toISOString().split('T')[0]; }</p>
+<p class="p1">function fmt(n) { return 'S/'+parseFloat(n||0).toFixed(2); }</p>
+<p class="p1">function mkid() { return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }</p>
+<p class="p1">function monthKey(d) { return (d||'').slice(0,7); }</p>
+<p class="p1">function fmtMes(m) {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (!m) return '';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const [y,mo] = m.split('-');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>return ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'][+mo-1]+' '+y;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">// ── NEGOCIO SELECTOR ───────────────────────────</p>
+<p class="p1">function renderBizScreen() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const grid = document.getElementById('biz-grid');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const cards = Object.entries(businesses).map(([id,b]) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const ing = b.ventas.reduce((a,v)=&gt;a+parseFloat(v.monto||0),0);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const gas = b.gastos.reduce((a,g)=&gt;a+parseFloat(g.monto||0),0);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>return `&lt;div class="biz-card" onclick="openBiz('${id}')"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="icon"&gt;${b.icon||'🏪'}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="name"&gt;${b.name}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="sub"&gt;${b.owner||''}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="margin-top:8px;font-size:.75rem;color:#2d6a4f;font-weight:600"&gt;Gan: ${fmt(ing-gas)}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}).join('');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>grid.innerHTML = cards + `&lt;div class="biz-add" onclick="openModal('modal-new-biz')"&gt;➕&lt;div style="font-size:.8rem;margin-top:4px;color:#2d6a4f"&gt;Nuevo negocio&lt;/div&gt;&lt;/div&gt;`;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function openBiz(id) {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>currentBiz = id;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const b = biz();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('app-title').textContent = b.icon+' '+b.name;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('app-owner').textContent = b.owner||'';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('biz-screen').style.display = 'none';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('app-screen').style.display = 'block';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>goTo('dashboard', document.querySelector('nav button'));</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function goBack() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('app-screen').style.display = 'none';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('biz-screen').style.display = 'flex';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>renderBizScreen();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function createBiz() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const name = document.getElementById('nb-name').value.trim();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const icon = document.getElementById('nb-icon').value||'🏪';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const owner = document.getElementById('nb-owner').value.trim();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (!name) { alert('Ingresa el nombre del negocio'); return; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const id = mkid();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>businesses[id] = { name, icon, owner, ventas:[], gastos:[], servicios:[] };</p>
+<p class="p1"><span class="Apple-converted-space">  </span>save();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>closeModal('modal-new-biz');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('nb-name').value='';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('nb-owner').value='';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>renderBizScreen();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>openBiz(id);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">// ── MODALS ─────────────────────────────────────</p>
+<p class="p1">function openModal(id) { document.getElementById(id).classList.add('open'); }</p>
+<p class="p1">function closeModal(id) { document.getElementById(id).classList.remove('open'); }</p>
+<p class="p2"><br></p>
+<p class="p1">// ── NAV ────────────────────────────────────────</p>
+<p class="p1">function goTo(page, btn) {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll('.page').forEach(p=&gt;p.classList.remove('active'));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll('nav button').forEach(b=&gt;b.classList.remove('active'));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById(page).classList.add('active');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (btn) btn.classList.add('active');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (page==='dashboard') renderDashboard();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (page==='quick') renderQuick();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (page==='gastos') renderGastos();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (page==='servicios') renderServicios();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">// ── DASHBOARD ──────────────────────────────────</p>
+<p class="p1">function renderDashboard() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const b = biz();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const sel = document.getElementById('mes-sel');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const months = new Set([today().slice(0,7)]);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>b.ventas.forEach(v=&gt;months.add(monthKey(v.fecha)));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>b.gastos.forEach(g=&gt;months.add(monthKey(g.fecha)));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const sorted = [...months].filter(Boolean).sort().reverse();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const cur = sel.value || sorted[0];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>sel.innerHTML = sorted.map(m=&gt;`&lt;option value="${m}" ${m===cur?'selected':''}&gt;${fmtMes(m)}&lt;/option&gt;`).join('');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const mes = sel.value || sorted[0];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const ventas = b.ventas.filter(v=&gt;monthKey(v.fecha)===mes);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const gastos = b.gastos.filter(g=&gt;monthKey(g.fecha)===mes);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const ing = ventas.reduce((a,v)=&gt;a+parseFloat(v.monto||0),0);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const gas = gastos.reduce((a,g)=&gt;a+parseFloat(g.monto||0),0);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('s-ing').textContent=fmt(ing);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('s-gas').textContent=fmt(gas);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const ganEl=document.getElementById('s-gan');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>ganEl.textContent=fmt(ing-gas);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>ganEl.className='val '+(ing-gas&gt;=0?'green':'red');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const all=[...ventas.map(v=&gt;({...v,tipo:'ingreso'})),...gastos.map(g=&gt;({...g,tipo:'gasto'}))].sort((a,b)=&gt;b.fecha.localeCompare(a.fecha));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const tb=document.getElementById('mov-table');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (!all.length){tb.innerHTML='&lt;tr&gt;&lt;td colspan="4" class="empty"&gt;Sin movimientos&lt;/td&gt;&lt;/tr&gt;';return;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>tb.innerHTML=all.map(m=&gt;`&lt;tr&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;td&gt;${m.fecha}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;td&gt;${m.tipo==='ingreso'?(m.servicio||m.descripcion||'-'):(m.descripcion||'-')}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;td&gt;&lt;span class="badge ${m.tipo==='ingreso'?'bg':'br'}"&gt;${m.tipo==='ingreso'?'Venta':'Gasto'}&lt;/span&gt;&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;td style="font-weight:600;color:${m.tipo==='ingreso'?'#2d6a4f':'#c0392b'}"&gt;${m.tipo==='ingreso'?'+':'-'}${fmt(m.monto)}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/tr&gt;`).join('');</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">// ── VENTA RÁPIDA ───────────────────────────────</p>
+<p class="p1">function renderQuick() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const b = biz();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const grid = document.getElementById('quick-grid');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const noSvc = document.getElementById('no-svc');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (!b.servicios.length) { grid.style.display='none'; noSvc.style.display='block'; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>else {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>grid.style.display='grid'; noSvc.style.display='none';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>grid.innerHTML = b.servicios.map(s=&gt;`</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="quick-btn" onclick="openQuick('${s.id}')"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="qname"&gt;${s.nombre}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="qprice"&gt;${s.precio?fmt(s.precio):'Precio libre'}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;`).join('');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>renderVentas();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function openQuick(svcId) {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const s = biz().servicios.find(s=&gt;s.id===svcId);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (!s) return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>quickSelected = s;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('q-title').textContent = '⚡ '+s.nombre;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('q-svc').textContent = s.nombre;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('q-monto').value = s.precio||'';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('q-cliente').value = '';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('q-fecha').value = today();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>openModal('modal-quick');</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function confirmQuick() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const monto = document.getElementById('q-monto').value;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const cliente = document.getElementById('q-cliente').value;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const fecha = document.getElementById('q-fecha').value || today();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (!monto||parseFloat(monto)&lt;=0){alert('Ingresa un monto');return;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>biz().ventas.push({id:mkid(),fecha,servicio:quickSelected.nombre,cliente,monto,nota:''});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>save(); closeModal('modal-quick'); renderQuick();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function addVentaManual() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const desc=document.getElementById('vm-desc').value.trim();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const monto=document.getElementById('vm-monto').value;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const fecha=document.getElementById('vm-fecha').value||today();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const cliente=document.getElementById('vm-cliente').value;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (!monto||parseFloat(monto)&lt;=0){alert('Ingresa un monto');return;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>biz().ventas.push({id:mkid(),fecha,servicio:desc||'Servicio',cliente,monto,nota:''});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>save();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('vm-desc').value='';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('vm-monto').value='';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('vm-cliente').value='';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>renderVentas();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function renderVentas() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const tb=document.getElementById('v-table');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const sorted=[...biz().ventas].sort((a,b)=&gt;b.fecha.localeCompare(a.fecha)).slice(0,20);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (!sorted.length){tb.innerHTML='&lt;tr&gt;&lt;td colspan="5" class="empty"&gt;Sin ventas&lt;/td&gt;&lt;/tr&gt;';return;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>tb.innerHTML=sorted.map(v=&gt;`&lt;tr&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;td&gt;${v.fecha}&lt;/td&gt;&lt;td&gt;${v.servicio||'-'}&lt;/td&gt;&lt;td&gt;${v.cliente||'-'}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;td style="color:#2d6a4f;font-weight:600"&gt;${fmt(v.monto)}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;td&gt;&lt;button class="del-btn" onclick="delVenta('${v.id}')"&gt;🗑&lt;/button&gt;&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/tr&gt;`).join('');</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function delVenta(id){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!confirm('¿Eliminar?'))return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>biz().ventas=biz().ventas.filter(v=&gt;v.id!==id);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>save();renderVentas();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">// ── GASTOS ─────────────────────────────────────</p>
+<p class="p1">function addGasto() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const fecha=document.getElementById('g-fecha').value||today();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const categoria=document.getElementById('g-cat').value;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const monto=document.getElementById('g-monto').value;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const descripcion=document.getElementById('g-desc').value;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (!monto||parseFloat(monto)&lt;=0){alert('Ingresa un monto');return;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>biz().gastos.push({id:mkid(),fecha,categoria,monto,descripcion});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>save();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('g-fecha').value='';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('g-monto').value='';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('g-desc').value='';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>renderGastos();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function renderGastos() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const tb=document.getElementById('g-table');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const sorted=[...biz().gastos].sort((a,b)=&gt;b.fecha.localeCompare(a.fecha));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (!sorted.length){tb.innerHTML='&lt;tr&gt;&lt;td colspan="5" class="empty"&gt;Sin gastos&lt;/td&gt;&lt;/tr&gt;';return;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>tb.innerHTML=sorted.map(g=&gt;`&lt;tr&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;td&gt;${g.fecha}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;td&gt;&lt;span class="badge br"&gt;${g.categoria}&lt;/span&gt;&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;td&gt;${g.descripcion||'-'}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;td style="color:#c0392b;font-weight:600"&gt;${fmt(g.monto)}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;td&gt;&lt;button class="del-btn" onclick="delGasto('${g.id}')"&gt;🗑&lt;/button&gt;&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/tr&gt;`).join('');</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function delGasto(id){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!confirm('¿Eliminar?'))return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>biz().gastos=biz().gastos.filter(g=&gt;g.id!==id);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>save();renderGastos();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">// ── SERVICIOS ──────────────────────────────────</p>
+<p class="p1">function addServicio() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const nombre=document.getElementById('s-nombre').value.trim();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const precio=document.getElementById('s-precio').value;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const duracion=document.getElementById('s-dur').value;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (!nombre){alert('Ingresa el nombre');return;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>biz().servicios.push({id:mkid(),nombre,precio,duracion});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>save();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('s-nombre').value='';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('s-precio').value='';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('s-dur').value='';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>renderServicios();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function renderServicios() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const tb=document.getElementById('s-table');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if (!biz().servicios.length){tb.innerHTML='&lt;tr&gt;&lt;td colspan="4" class="empty"&gt;Sin servicios&lt;/td&gt;&lt;/tr&gt;';return;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>tb.innerHTML=biz().servicios.map(s=&gt;`&lt;tr&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;td style="font-weight:600"&gt;${s.nombre}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;td style="color:#2d6a4f"&gt;${s.precio?fmt(s.precio):'-'}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;td&gt;${s.duracion||'-'}&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;td&gt;&lt;button class="del-btn" onclick="delServicio('${s.id}')"&gt;🗑&lt;/button&gt;&lt;/td&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/tr&gt;`).join('');</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function delServicio(id){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!confirm('¿Eliminar?'))return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>biz().servicios=biz().servicios.filter(s=&gt;s.id!==id);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>save();renderServicios();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">// ── INIT ───────────────────────────────────────</p>
+<p class="p1">load();</p>
+<p class="p1">renderBizScreen();</p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
