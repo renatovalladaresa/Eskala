@@ -7,9 +7,10 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',sans-serif;background:#f0f4f8;color:#333;min-height:100vh}
-
-/* ── MODO CLIENTE ── */
-#client-screen{min-height:100vh;display:flex;flex-direction:column}
+#loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:16px}
+.spinner{width:40px;height:40px;border:4px solid #d8f3dc;border-top-color:#2d6a4f;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#client-screen{min-height:100vh;display:none;flex-direction:column}
 .client-header{background:#2d6a4f;padding:20px;text-align:center;color:white}
 .client-header h1{font-size:1.3rem;font-weight:700}
 .client-header p{font-size:.85rem;opacity:.8;margin-top:4px}
@@ -24,14 +25,11 @@ body{font-family:'Segoe UI',sans-serif;background:#f0f4f8;color:#333;min-height:
 .gasto-btn{background:white;border:2px dashed #e0e0e0;border-radius:16px;padding:16px;text-align:center;cursor:pointer;margin-top:14px;width:100%;color:#888;font-size:.88rem}
 .gasto-btn:hover{border-color:#2d6a4f;color:#2d6a4f}
 .admin-link{text-align:center;padding:20px;color:#bbb;font-size:.75rem;cursor:pointer;user-select:none}
-
-/* ── MODAL ── */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-end;justify-content:center}
 .modal-bg.open{display:flex}
 .modal{background:white;border-radius:20px 20px 0 0;padding:28px 24px;width:100%;max-width:500px;animation:slideUp .25s ease}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .modal h3{color:#1b4332;font-size:1.1rem;margin-bottom:6px}
-.modal .svc-label{font-size:.82rem;color:#888;margin-bottom:16px}
 label{display:block;font-size:.82rem;color:#555;margin-bottom:4px;margin-top:14px}
 input,select{width:100%;padding:12px;border:1.5px solid #ddd;border-radius:10px;font-size:.95rem}
 input:focus,select:focus{outline:none;border-color:#2d6a4f}
@@ -39,14 +37,8 @@ input:focus,select:focus{outline:none;border-color:#2d6a4f}
 .btn:hover{background:#1b4332}
 .btn-gray{background:#f0f4f8;color:#555;margin-top:8px}
 .btn-gray:hover{background:#e0e8ef}
-.btn-red{background:#c0392b}.btn-red:hover{background:#922b21}
-.btn-outline{background:white;color:#2d6a4f;border:2px solid #2d6a4f}
-
-/* ── TOAST ── */
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:#1b4332;color:white;padding:12px 24px;border-radius:30px;font-size:.9rem;font-weight:600;transition:transform .3s;z-index:300;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
-
-/* ── ADMIN ── */
 #admin-screen{display:none;min-height:100vh}
 .admin-header{background:#1b4332;color:white;padding:14px 20px;display:flex;align-items:center;gap:10px}
 .admin-header h1{font-size:1rem;flex:1}
@@ -74,13 +66,18 @@ tr:last-child td{border-bottom:none}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 #mes-sel{width:auto;padding:5px 8px;font-size:.82rem;border-radius:8px;border:1px solid #ddd}
 .pin-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:16px}
-.pin-screen h2{color:#2d6a4f}
 .pin-input{font-size:1.5rem;letter-spacing:8px;text-align:center;width:160px;padding:12px}
 </style>
 </head>
 <body>
 
-<!-- ══ MODO CLIENTE ══ -->
+<!-- LOADING -->
+<div id="loading-screen">
+  <div class="spinner"></div>
+  <p style="color:#888;font-size:.9rem">Cargando Eskala...</p>
+</div>
+
+<!-- CLIENTE -->
 <div id="client-screen">
   <div class="client-header">
     <h1 id="client-biz-name">💼 Mi Negocio</h1>
@@ -89,8 +86,6 @@ tr:last-child td{border-bottom:none}
   <div class="client-body">
     <div class="svc-grid" id="client-svc-grid"></div>
     <button class="gasto-btn" onclick="openGastoModal()">➕ Registrar un gasto</button>
-
-    <!-- HISTORIAL DEL DÍA -->
     <div style="margin-top:24px">
       <div style="font-size:.82rem;color:#888;font-weight:600;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">📋 Registros de hoy</div>
       <div id="client-history"></div>
@@ -99,11 +94,11 @@ tr:last-child td{border-bottom:none}
   <div class="admin-link" onclick="askAdmin()">⚙ Admin</div>
 </div>
 
-<!-- ══ MODAL VENTA ══ -->
+<!-- MODAL VENTA -->
 <div class="modal-bg" id="modal-venta">
   <div class="modal">
     <h3 id="mv-title">Registrar Venta</h3>
-    <div class="svc-label" style="font-size:1.1rem;font-weight:700;color:#2d6a4f;margin-bottom:16px" id="mv-svc"></div>
+    <div style="font-size:1.1rem;font-weight:700;color:#2d6a4f;margin-bottom:16px" id="mv-svc"></div>
     <input type="hidden" id="mv-monto">
     <label style="font-size:1rem;color:#333;font-weight:600">¿A quién le vendiste?</label>
     <input type="text" id="mv-cliente" placeholder="Nombre del cliente" style="font-size:1rem;padding:14px;margin-top:6px">
@@ -112,7 +107,7 @@ tr:last-child td{border-bottom:none}
   </div>
 </div>
 
-<!-- ══ MODAL GASTO ══ -->
+<!-- MODAL GASTO -->
 <div class="modal-bg" id="modal-gasto">
   <div class="modal">
     <h3>Registrar Gasto</h3>
@@ -125,11 +120,11 @@ tr:last-child td{border-bottom:none}
   </div>
 </div>
 
-<!-- ══ MODAL PIN ADMIN ══ -->
+<!-- MODAL PIN -->
 <div class="modal-bg" id="modal-pin">
   <div class="modal">
     <div class="pin-screen">
-      <h2>🔐 Acceso Admin</h2>
+      <h2 style="color:#2d6a4f">🔐 Acceso Admin</h2>
       <input type="password" class="pin-input" id="pin-input" placeholder="••••" maxlength="4" inputmode="numeric">
       <button class="btn" onclick="checkPin()" style="width:160px">Entrar</button>
       <button class="btn btn-gray" onclick="closeModal('modal-pin')" style="width:160px">Cancelar</button>
@@ -138,7 +133,7 @@ tr:last-child td{border-bottom:none}
   </div>
 </div>
 
-<!-- ══ ADMIN ══ -->
+<!-- ADMIN -->
 <div id="admin-screen">
   <div class="admin-header">
     <button class="back-btn" onclick="goToClient()">←</button>
@@ -150,10 +145,8 @@ tr:last-child td{border-bottom:none}
     <button onclick="goTo('servicios',this)">🛠️ Servicios</button>
     <button onclick="goTo('config',this)">⚙ Config</button>
   </nav>
-
-  <!-- RESUMEN -->
   <div id="dashboard" class="page active">
-    <div style="display:flex;align-items:center;gap:8px;margin:12px 0 8px;padding:0 2px">
+    <div style="display:flex;align-items:center;gap:8px;margin:12px 0 8px">
       <span style="font-size:.82rem;color:#555">Mes:</span>
       <select id="mes-sel" onchange="renderDashboard()"></select>
     </div>
@@ -162,15 +155,12 @@ tr:last-child td{border-bottom:none}
       <div class="sum-card"><div class="lbl">Gastos</div><div class="val red" id="s-gas">S/0</div></div>
       <div class="sum-card"><div class="lbl">Ganancia</div><div class="val blue" id="s-gan">S/0</div></div>
     </div>
-    <!-- Top servicios -->
     <div class="card">
       <h2>🏆 Top Servicios del mes</h2>
       <table><thead><tr><th>Servicio</th><th>Ventas</th><th>Total</th></tr></thead>
       <tbody id="top-table"></tbody></table>
     </div>
   </div>
-
-  <!-- MOVIMIENTOS -->
   <div id="movimientos" class="page">
     <div class="card">
       <h2>📋 Todos los movimientos</h2>
@@ -178,8 +168,6 @@ tr:last-child td{border-bottom:none}
       <tbody id="mov-table"></tbody></table>
     </div>
   </div>
-
-  <!-- SERVICIOS -->
   <div id="servicios" class="page">
     <div class="card">
       <h2>➕ Nuevo Servicio</h2>
@@ -197,8 +185,6 @@ tr:last-child td{border-bottom:none}
       <tbody id="s-table"></tbody></table>
     </div>
   </div>
-
-  <!-- CONFIG -->
   <div id="config" class="page">
     <div class="card">
       <h2>⚙ Configuración</h2>
@@ -211,27 +197,81 @@ tr:last-child td{border-bottom:none}
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<script>
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, collection, addDoc, getDocs, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAftj2lN08kZQ6P7PwQa8vpHykJvPcy-i8",
+  authDomain: "eskala-388f0.firebaseapp.com",
+  projectId: "eskala-388f0",
+  storageBucket: "eskala-388f0.firebasestorage.app",
+  messagingSenderId: "143592426254",
+  appId: "1:143592426254:web:5884ac1b9009b3ffd2255f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 // ── STATE ──────────────────────────────────
 let state = { name:'Mi Negocio', pin:'1234', ventas:[], gastos:[], servicios:[] };
 let selectedSvc = null;
 
-function save(){ localStorage.setItem('eskala_v2', JSON.stringify(state)); }
-function load(){
-  const d = localStorage.getItem('eskala_v2');
-  if(d) state = JSON.parse(d);
-}
 function today(){ return new Date().toISOString().split('T')[0]; }
 function fmt(n){ return 'S/'+parseFloat(n||0).toFixed(2); }
-function mkid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
 function monthKey(d){ return (d||'').slice(0,7); }
 function fmtMes(m){
   if(!m) return '';
   const [y,mo]=m.split('-');
   return ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'][+mo-1]+' '+y;
+}
+
+// ── FIREBASE OPS ───────────────────────────
+async function loadFromFirebase(){
+  try {
+    const cfgDoc = await getDoc(doc(db,'eskala','config'));
+    if(cfgDoc.exists()) Object.assign(state, cfgDoc.data());
+
+    const [vSnap, gSnap, sSnap] = await Promise.all([
+      getDocs(collection(db,'ventas')),
+      getDocs(collection(db,'gastos')),
+      getDocs(collection(db,'servicios'))
+    ]);
+    state.ventas = vSnap.docs.map(d=>({id:d.id,...d.data()}));
+    state.gastos = gSnap.docs.map(d=>({id:d.id,...d.data()}));
+    state.servicios = sSnap.docs.map(d=>({id:d.id,...d.data()}));
+  } catch(e){ console.error(e); }
+}
+
+async function saveConfig(){
+  const name = document.getElementById('cfg-name').value.trim();
+  const pin  = document.getElementById('cfg-pin').value;
+  if(pin && pin.length!==4){alert('El PIN debe tener 4 dígitos');return;}
+  if(name) state.name = name;
+  if(pin)  state.pin  = pin;
+  await setDoc(doc(db,'eskala','config'), {name:state.name, pin:state.pin});
+  showToast('✅ Configuración guardada');
+  document.getElementById('client-biz-name').textContent = '💼 '+state.name;
+}
+window.saveConfig = saveConfig;
+
+async function addVentaDB(venta){
+  const ref = await addDoc(collection(db,'ventas'), venta);
+  return ref.id;
+}
+async function addGastoDB(gasto){
+  const ref = await addDoc(collection(db,'gastos'), gasto);
+  return ref.id;
+}
+async function addServicioDB(svc){
+  const ref = await addDoc(collection(db,'servicios'), svc);
+  return ref.id;
+}
+async function deleteDocDB(col, id){
+  await deleteDoc(doc(db, col, id));
 }
 
 // ── TOAST ──────────────────────────────────
@@ -240,41 +280,14 @@ function showToast(msg){
   t.textContent=msg; t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2200);
 }
+window.showToast = showToast;
 
 // ── MODALS ─────────────────────────────────
 function openModal(id){ document.getElementById(id).classList.add('open'); }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+window.closeModal = closeModal;
 
 // ── CLIENTE ────────────────────────────────
-function renderClientHistory(){
-  const hoy = today();
-  const ventas = state.ventas.filter(v=>v.fecha===hoy);
-  const gastos = state.gastos.filter(g=>g.fecha===hoy);
-  const all = [
-    ...ventas.map(v=>({...v,tipo:'venta'})),
-    ...gastos.map(g=>({...g,tipo:'gasto'}))
-  ].sort((a,b)=>b.id.localeCompare(a.id));
-  const el = document.getElementById('client-history');
-  if(!all.length){
-    el.innerHTML='<div style="text-align:center;color:#bbb;padding:16px;font-size:.85rem">Aún no hay registros hoy</div>';
-    return;
-  }
-  el.innerHTML = all.map(m=>`
-    <div style="background:white;border-radius:12px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 6px rgba(0,0,0,.06)">
-      <div>
-        <div style="font-weight:600;font-size:.9rem;color:#1b4332">${m.tipo==='venta'?(m.servicio||'-'):(m.descripcion||'Gasto')}</div>
-        <div style="font-size:.78rem;color:#888;margin-top:2px">${m.tipo==='venta'?(m.cliente?'👤 '+m.cliente:'Sin nombre'):'📤 Gasto'}</div>
-      </div>
-      <div style="font-weight:700;font-size:1rem;color:${m.tipo==='venta'?'#2d6a4f':'#c0392b'}">${m.tipo==='venta'?'+':'-'}${fmt(m.monto)}</div>
-    </div>`).join('');
-  // Total del día
-  const totalVentas = ventas.reduce((a,v)=>a+parseFloat(v.monto||0),0);
-  el.innerHTML += `<div style="background:#1b4332;border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;color:white;margin-top:4px">
-    <span style="font-size:.88rem;opacity:.8">Total del día</span>
-    <span style="font-weight:700;font-size:1rem">${fmt(totalVentas)}</span>
-  </div>`;
-}
-
 function renderClient(){
   document.getElementById('client-biz-name').textContent = '💼 '+state.name;
   const grid = document.getElementById('client-svc-grid');
@@ -289,6 +302,35 @@ function renderClient(){
       <div class="svc-price">${s.precio?fmt(s.precio):'Precio libre'}</div>
     </button>`).join('');
 }
+window.renderClient = renderClient;
+
+function renderClientHistory(){
+  const hoy = today();
+  const ventas = state.ventas.filter(v=>v.fecha===hoy);
+  const gastos = state.gastos.filter(g=>g.fecha===hoy);
+  const all = [
+    ...ventas.map(v=>({...v,tipo:'venta'})),
+    ...gastos.map(g=>({...g,tipo:'gasto'}))
+  ].sort((a,b)=>(b.ts||0)-(a.ts||0));
+  const el = document.getElementById('client-history');
+  if(!all.length){
+    el.innerHTML='<div style="text-align:center;color:#bbb;padding:16px;font-size:.85rem">Aún no hay registros hoy</div>';
+    return;
+  }
+  el.innerHTML = all.map(m=>`
+    <div style="background:white;border-radius:12px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 6px rgba(0,0,0,.06)">
+      <div>
+        <div style="font-weight:600;font-size:.9rem;color:#1b4332">${m.tipo==='venta'?(m.servicio||'-'):(m.descripcion||'Gasto')}</div>
+        <div style="font-size:.78rem;color:#888;margin-top:2px">${m.tipo==='venta'?(m.cliente?'👤 '+m.cliente:'Sin nombre'):'📤 Gasto'}</div>
+      </div>
+      <div style="font-weight:700;font-size:1rem;color:${m.tipo==='venta'?'#2d6a4f':'#c0392b'}">${m.tipo==='venta'?'+':'-'}${fmt(m.monto)}</div>
+    </div>`).join('');
+  const totalVentas = ventas.reduce((a,v)=>a+parseFloat(v.monto||0),0);
+  el.innerHTML += `<div style="background:#1b4332;border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;color:white;margin-top:4px">
+    <span style="font-size:.88rem;opacity:.8">Total del día</span>
+    <span style="font-weight:700;font-size:1rem">${fmt(totalVentas)}</span>
+  </div>`;
+}
 
 function openVentaModal(svcId){
   selectedSvc = state.servicios.find(s=>s.id===svcId);
@@ -300,16 +342,20 @@ function openVentaModal(svcId){
   openModal('modal-venta');
   setTimeout(()=>document.getElementById('mv-cliente').focus(),300);
 }
+window.openVentaModal = openVentaModal;
 
-function confirmVenta(){
+async function confirmVenta(){
   const monto = document.getElementById('mv-monto').value;
   const cliente = document.getElementById('mv-cliente').value;
-  if(!monto||parseFloat(monto)<=0){ alert('Ingresa un monto'); return; }
-  state.ventas.push({id:mkid(),fecha:today(),servicio:selectedSvc.nombre,cliente,monto});
-  save(); closeModal('modal-venta');
+  if(!monto||parseFloat(monto)<=0){alert('Este servicio no tiene precio. Configúralo en Admin.');return;}
+  const venta = {fecha:today(), servicio:selectedSvc.nombre, cliente, monto, ts:Date.now()};
+  const id = await addVentaDB(venta);
+  state.ventas.push({id,...venta});
+  closeModal('modal-venta');
   showToast('✅ Venta registrada: '+fmt(monto));
   renderClientHistory();
 }
+window.confirmVenta = confirmVenta;
 
 function openGastoModal(){
   document.getElementById('mg-desc').value='';
@@ -317,16 +363,20 @@ function openGastoModal(){
   openModal('modal-gasto');
   setTimeout(()=>document.getElementById('mg-desc').focus(),300);
 }
+window.openGastoModal = openGastoModal;
 
-function confirmGasto(){
+async function confirmGasto(){
   const desc = document.getElementById('mg-desc').value.trim();
   const monto = document.getElementById('mg-monto').value;
-  if(!monto||parseFloat(monto)<=0){ alert('Ingresa un monto'); return; }
-  state.gastos.push({id:mkid(),fecha:today(),descripcion:desc||'Gasto',monto});
-  save(); closeModal('modal-gasto');
+  if(!monto||parseFloat(monto)<=0){alert('Ingresa un monto');return;}
+  const gasto = {fecha:today(), descripcion:desc||'Gasto', monto, ts:Date.now()};
+  const id = await addGastoDB(gasto);
+  state.gastos.push({id,...gasto});
+  closeModal('modal-gasto');
   showToast('📤 Gasto registrado: '+fmt(monto));
   renderClientHistory();
 }
+window.confirmGasto = confirmGasto;
 
 // ── ADMIN PIN ──────────────────────────────
 function askAdmin(){
@@ -335,6 +385,7 @@ function askAdmin(){
   openModal('modal-pin');
   setTimeout(()=>document.getElementById('pin-input').focus(),300);
 }
+window.askAdmin = askAdmin;
 
 function checkPin(){
   const pin = document.getElementById('pin-input').value;
@@ -349,12 +400,14 @@ function checkPin(){
     document.getElementById('pin-input').value='';
   }
 }
+window.checkPin = checkPin;
 
 function goToClient(){
   document.getElementById('admin-screen').style.display='none';
   document.getElementById('client-screen').style.display='flex';
-  renderClient();
+  renderClient(); renderClientHistory();
 }
+window.goToClient = goToClient;
 
 // ── ADMIN NAV ──────────────────────────────
 function goTo(page, btn){
@@ -366,6 +419,7 @@ function goTo(page, btn){
   if(page==='movimientos') renderMovimientos();
   if(page==='servicios') renderServicios();
 }
+window.goTo = goTo;
 
 // ── DASHBOARD ──────────────────────────────
 function renderDashboard(){
@@ -386,7 +440,6 @@ function renderDashboard(){
   const ganEl=document.getElementById('s-gan');
   ganEl.textContent=fmt(ing-gas);
   ganEl.className='val '+(ing-gas>=0?'green':'red');
-  // Top servicios
   const top={};
   ventas.forEach(v=>{
     if(!top[v.servicio]) top[v.servicio]={count:0,total:0};
@@ -396,13 +449,12 @@ function renderDashboard(){
   const tb=document.getElementById('top-table');
   if(!topArr.length){tb.innerHTML='<tr><td colspan="3" class="empty">Sin ventas este mes</td></tr>';return;}
   tb.innerHTML=topArr.map(([name,d])=>`<tr>
-    <td>${name}</td>
-    <td style="text-align:center">${d.count}</td>
+    <td>${name}</td><td style="text-align:center">${d.count}</td>
     <td style="color:#2d6a4f;font-weight:600">${fmt(d.total)}</td>
   </tr>`).join('');
 }
+window.renderDashboard = renderDashboard;
 
-// ── MOVIMIENTOS ────────────────────────────
 function renderMovimientos(){
   const all=[
     ...state.ventas.map(v=>({...v,tipo:'ingreso'})),
@@ -418,28 +470,33 @@ function renderMovimientos(){
     <td><button class="del-btn" onclick="delMov('${m.id}','${m.tipo}')">🗑</button></td>
   </tr>`).join('');
 }
+window.renderMovimientos = renderMovimientos;
 
-function delMov(id,tipo){
+async function delMov(id,tipo){
   if(!confirm('¿Eliminar?'))return;
+  const col = tipo==='ingreso'?'ventas':'gastos';
+  await deleteDocDB(col, id);
   if(tipo==='ingreso') state.ventas=state.ventas.filter(v=>v.id!==id);
   else state.gastos=state.gastos.filter(g=>g.id!==id);
-  save(); renderMovimientos();
+  renderMovimientos();
 }
+window.delMov = delMov;
 
-// ── SERVICIOS ──────────────────────────────
-function addServicio(){
+async function addServicio(){
   const nombre=document.getElementById('s-nombre').value.trim();
   const icon=document.getElementById('s-icon').value||'🔧';
   const precio=document.getElementById('s-precio').value;
   if(!nombre){alert('Ingresa el nombre');return;}
-  state.servicios.push({id:mkid(),icon,nombre,precio});
-  save();
+  const svc = {icon,nombre,precio};
+  const id = await addServicioDB(svc);
+  state.servicios.push({id,...svc});
   document.getElementById('s-nombre').value='';
   document.getElementById('s-precio').value='';
   document.getElementById('s-icon').value='🔧';
   renderServicios();
   showToast('✅ Servicio agregado');
 }
+window.addServicio = addServicio;
 
 function renderServicios(){
   const tb=document.getElementById('s-table');
@@ -451,32 +508,31 @@ function renderServicios(){
     <td><button class="del-btn" onclick="delSvc('${s.id}')">🗑</button></td>
   </tr>`).join('');
 }
+window.renderServicios = renderServicios;
 
-function delSvc(id){
+async function delSvc(id){
   if(!confirm('¿Eliminar?'))return;
+  await deleteDocDB('servicios', id);
   state.servicios=state.servicios.filter(s=>s.id!==id);
-  save(); renderServicios(); showToast('Servicio eliminado');
+  renderServicios(); showToast('Servicio eliminado');
 }
+window.delSvc = delSvc;
 
-// ── CONFIG ─────────────────────────────────
 function loadConfig(){
   document.getElementById('cfg-name').value=state.name||'';
   document.getElementById('cfg-pin').value=state.pin||'1234';
 }
 
-function saveConfig(){
-  const name=document.getElementById('cfg-name').value.trim();
-  const pin=document.getElementById('cfg-pin').value;
-  if(pin&&pin.length!==4){alert('El PIN debe tener 4 dígitos');return;}
-  if(name) state.name=name;
-  if(pin) state.pin=pin;
-  save(); showToast('✅ Configuración guardada');
+// ── INIT ───────────────────────────────────
+async function init(){
+  await loadFromFirebase();
+  document.getElementById('loading-screen').style.display='none';
+  document.getElementById('client-screen').style.display='flex';
+  renderClient();
+  renderClientHistory();
 }
 
-// ── INIT ───────────────────────────────────
-load();
-renderClient();
-renderClientHistory();
+init();
 </script>
 </body>
 </html>
